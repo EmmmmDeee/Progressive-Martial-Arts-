@@ -70,7 +70,7 @@ export function Header() {
           </RouteLink>
 
           {/* Desktop mega nav */}
-          <NavigationMenu className="hidden lg:flex">
+          <NavigationMenu dir="ltr" className="hidden lg:flex">
             <NavigationMenuList>
               {/* Programs mega */}
               <NavigationMenuItem>

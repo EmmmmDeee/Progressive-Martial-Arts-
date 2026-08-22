@@ -71,3 +71,15 @@ rollback rehearsal. Snapshots are immutable once `SHA256SUMS` is written.
 - [x] Representative renders + performance/accessibility counters captured
       (desktop + mobile, per template family)
 - [ ] Search Console / analytics / GBP exports archived
+
+## Stack facts (from archived markup — no server access needed)
+
+- Theme: `cherie` (+ `cherie-core` plugin) — an Elementor-based commercial theme
+- Page builder: Elementor 4.0.7 (external CSS print method, Google Fonts enabled)
+- Commerce: WooCommerce + WooCommerce PayPal Payments
+- Forms: Contact Form 7 sitewide; Simple Cloudflare Turnstile present on some pages
+- SEO: Yoast (sitemaps, canonicals, robots directives observed per-URL)
+- Analytics: **none** — no GA4/UA/GTM/pixel loader anywhere in the 488 captured
+  pages (baseline/analytics-state.tsv). Phase 33 needs analytics installed
+  first; there is no historical web-analytics dataset to preserve, so the
+  "analytics export" manual step reduces to Search Console + GBP only.

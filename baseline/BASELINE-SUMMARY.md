@@ -1,9 +1,9 @@
-# Production baseline summary — 2026-08-22T02:30:12Z
+# Production baseline summary — 2026-08-22T04:45:40Z
 
 Site: https://progressivemartialarts.com.au/ (WordPress + WooCommerce + Yoast)
 
 ## URL universe
-- Inventoried URLs: 496
+- Inventoried URLs: 497
   - product-sitemap.xml: 238
   - product_tag-sitemap.xml: 171
   - page-sitemap.xml: 27
@@ -15,14 +15,16 @@ Site: https://progressivemartialarts.com.au/ (WordPress + WooCommerce + Yoast)
   - courses-sitemap.xml: 4
   - category-sitemap.xml: 3
   - author-sitemap.xml: 2
+  - crawl-discovered: 1
 
 ## HTTP status (must not regress without an explicit redirect decision)
 - 200: 488
-- 404: 3
+- 404: 4
 
 ### Non-200 surfaces (pre-existing; recorded so the migration is never blamed)
 - 404 https://progressivemartialarts.com.au/cart/
 - 404 https://progressivemartialarts.com.au/my-account/
+- 404 https://progressivemartialarts.com.au/product/jean-jacques-machado-seminar-brisbane-april-23-26-2026/
 - 404 https://progressivemartialarts.com.au/this-url-must-404-24826
 
 ### Redirects observed

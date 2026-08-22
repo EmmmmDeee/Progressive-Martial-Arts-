@@ -1,0 +1,28 @@
+entity	kind	url	note
+Kali	program	https://progressivemartialarts.com.au/kali/	primary nav
+Jeet Kune Do Concepts	program	https://progressivemartialarts.com.au/jeet-kune-do-concepts/	primary nav
+Maphilindo Silat	program	https://progressivemartialarts.com.au/silat/	primary nav
+Grappling / BJJ	program	https://progressivemartialarts.com.au/grappling-bjj/	primary nav
+Muay Thai	program	https://progressivemartialarts.com.au/muay-thai/	primary nav
+Lee Jun Fan Gung Fu	program	https://progressivemartialarts.com.au/lee-jun-fan-gung-fu/	submenu (labelled "Jun Fan" in one variant)
+Ranges	program	https://progressivemartialarts.com.au/ranges/	submenu
+Mini Muscles	kids-program	https://progressivemartialarts.com.au/mini-muscles/	primary nav
+Timetable	timetable	https://progressivemartialarts.com.au/timetable/	single page
+PMAAI Instructors and Support Crew	people	https://progressivemartialarts.com.au/pmaai-instructors-and-support-crew/	directory
+Certified Instructors under Guro Daniel Inosanto	people	https://progressivemartialarts.com.au/certified-instructors-under-guro-daniel-inosanto/	credentials
+Guro Dan	person	https://progressivemartialarts.com.au/guro-dan/	blog post type
+Sifu Francis	person	https://progressivemartialarts.com.au/sifu-francis/	blog post type
+PMAAI History	history	https://progressivemartialarts.com.au/pmaai-history/	doubles as About
+Jean Jacques Machado Seminar 2023 pictures	event-media	https://progressivemartialarts.com.au/pictures-master-jean-jacques-machado-seminar-2023/	gallery
+Guro Dan and Sifu Francis 2022 seminar photos	event-media	https://progressivemartialarts.com.au/guro-dan-and-sifu-francis-2022-seminar-photos/	gallery
+Pictures from earlier seminars	event-media	https://progressivemartialarts.com.au/pictures-from-earlier-seminars/	gallery
+Photos of Cookie with other instructors	event-media	https://progressivemartialarts.com.au/photos-of-cookie-with-other-instructors/	gallery
+Historical pictures from various classes	event-media	https://progressivemartialarts.com.au/historical-pictures-from-various-classes/	gallery
+Student photos	media	https://progressivemartialarts.com.au/student-photos/	gallery
+Professor Jean Jacques seminar (Apr 2026)	event	https://progressivemartialarts.com.au/professor-jean-jacques-seminar/	upcoming; registration product link 404s
+Visiting Student Information	visitor-info	https://progressivemartialarts.com.au/visiting-student-information/	submenu
+Links	links	https://progressivemartialarts.com.au/links/	submenu
+Affiliate Clubs	links	https://progressivemartialarts.com.au/?page_id=14587	nav uses raw page_id URL (defect)
+Martial Arts Shop	commerce	https://progressivemartialarts.com.au/shop/	WooCommerce; 237 products
+Contact	conversion	https://progressivemartialarts.com.au/contact/	CF7 + Turnstile + Maps embed
+Blog	blog	https://progressivemartialarts.com.au/blog/	5 posts

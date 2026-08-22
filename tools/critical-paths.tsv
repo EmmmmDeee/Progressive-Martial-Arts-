@@ -1,0 +1,7 @@
+path	expected_status
+/	200
+/shop/	200
+/cart/	404
+/checkout/	200
+/my-account/	404
+/contact/	200

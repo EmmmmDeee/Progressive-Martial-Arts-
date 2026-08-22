@@ -4,3 +4,5 @@ node_modules/
 dev.pid
 .env
 db/*.db-journal
+next-env.d.ts
+prisma/db/

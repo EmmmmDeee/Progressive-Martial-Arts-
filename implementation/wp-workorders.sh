@@ -51,3 +51,25 @@ $WP post list --pagename=latest-news --field=ID | xargs -r -n1 $WP post update -
 
 echo "== P2-3: convert /checkout/ 302 to the deterministic 301 (redirects.htaccess)"
 echo "All work orders staged. Recrawl with tools/01+02, rerun tools/20-url-graph.py, diff."
+
+echo "== P3-1: lexicography — one brand suffix + separator sitewide (graph/lexicon.tsv)"
+# Yoast: separator '|', sitename 'Progressive Martial Arts'; remove per-page
+# off-brand suffixes (PMA / PMAAI / ...Academy / ...Australia): 10 pages in
+# graph/title-defects.tsv carry hand-written SEO titles — clear or align them.
+
+echo "== P3-2: lexicography — strip hand-typed brand from 3 product titles (doubled suffix)"
+for slug in long-pants-progressive-martial-arts singlet-ladies-progressive-martial-arts t-shirt-progressive-martial-arts; do
+  id=$($WP post list --post_type=product --name=$slug --field=ID) && [ -n "$id" ] \
+    && $WP post update "$id" --post_title="$($WP post get "$id" --field=post_title | sed 's/ - Progressive Martial Arts$//')"
+done
+
+echo "== P3-3: lexicography — canonical term spellings in titles/terms"
+# Brazilian Jiu-Jitsu (hyphenated): rename product_tag/category titles
+#   'Brazilian Jiu Jitsu' -> 'Brazilian Jiu-Jitsu'; product title for the
+#   Machado t-shirt likewise.
+# Muay Thai: retitle the muay-thai-thai-boxing archive (tag merge already in
+#   migration map); 'Thai Boxing Shorts' product -> 'Muay Thai Shorts';
+#   /thai-boxing/ page consolidation already in migration map.
+# Proper-noun exemptions stand: 'World Thai Boxing Association', Inosanto DVD
+#   titles, 'Lameco Eskrima' keep official names.
+# Full defect list: graph/title-defects.tsv (regenerate: tools/22-lexicon-audit.py)

@@ -1,0 +1,15 @@
+canonical	variants_observed	rule	scope
+Progressive Martial Arts	PMA | PMAAI | Progressive Martial Arts Australia | Progressive Martial Arts Academy	One brand suffix sitewide, set once in the Yoast title template — never hand-typed into post titles	titles/meta
+|	" - " (383 pages) vs " | " (56 pages)	One title separator, set in Yoast; page titles carry no separator of their own	titles/meta
+Muay Thai	Thai Boxing · MuayThai	Muay Thai names the art everywhere. Proper-noun exemption: "World Thai Boxing Association" and product/association names keep their official wording	content/nav/tags
+Jun Fan Gung Fu	Jun Fan Gung Fu-JKD · JKD (as alias)	Jun Fan Gung Fu is the system; JKD abbreviates Jeet Kune Do Concepts only — the two are distinct programs and never interchangeable	content/tags
+Jeet Kune Do (JKD)	jeet-kune-do tag applied to Jun Fan products	First use spelled out with (JKD); JKD alone thereafter	content
+Brazilian Jiu-Jitsu (BJJ)	Jiu Jitsu · Jiu-Jitsu · Jujitsu	Hyphenated with (BJJ) on first use; BJJ thereafter	content
+Eskrima	Escrima · Arnis	Eskrima is the house spelling (13:1 dominant); Arnis/Escrima only inside official product titles (e.g. Lameco Eskrima keeps its name)	content/tags
+Kali	—	Program name at PMAAI (encompasses Eskrima/Arnis material); program page and nav always say Kali	nav/programs
+Pencak Silat	Pentjak Silat · Bersilat (distinct art — not a variant)	Pencak spelling; Bersilat and Mande Muda are distinct arts, never merged	tags
+Maphilindo Silat	Silat (bare)	Full program name in nav/titles; bare "Silat" acceptable in running prose after first use	nav/programs
+Mini Muscles	Kids · Mini-Muscles	Program name is Mini Muscles; nav label "Kids — Mini Muscles" for intent clarity	nav
+gi / gis	Gi's	Lowercase in prose, no apostrophe plural; capitalised only in titles	content
+timetable	schedule · time table	"Timetable" everywhere (nav, headings, CTA)	nav/content
+Start Training	Enquire · Contact us (as acquisition CTA)	Acquisition CTA text is exactly "Start Training" sitewide; "Contact" reserved for general enquiries	CTA

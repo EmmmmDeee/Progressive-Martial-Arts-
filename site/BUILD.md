@@ -14,7 +14,8 @@ npm install --no-audit --no-fund
 
 ## Setup
 ```bash
-echo 'DATABASE_URL="file:./db/custom.db"' > .env
+cp .env.example .env   # DATABASE_URL="file:./db/custom.db" (resolved by Prisma
+                       # relative to prisma/schema.prisma -> prisma/db/custom.db)
 npx prisma generate
 npx prisma db push --accept-data-loss
 npx tsx prisma/seed.ts        # 6 arts, 4 instructors, 8 products, 17 classes, 3 seminars, 6 testimonials
@@ -33,4 +34,13 @@ npx next start -p 3000
   (fixed by `dir="ltr"` on the header NavigationMenu).
 - API: GET arts/classes/seminars/instructors/testimonials/products 200 with seeded data.
 - Conversion core: POST /api/enroll → 200 "Trial class booked" (DB write); bad input → 400.
+- Commerce journey (verified end-to-end): GET /api/products → 8 items; POST /api/orders → 200 with order id; GET /api/orders/{id} → 200 confirmation.
+
+## Canonical database location
+Prisma resolves the relative `file:` SQLite URL **relative to `prisma/schema.prisma`**,
+so the one canonical DB is `prisma/db/custom.db` — used identically by the CLI
+(`db push`, `migrate`) and the runtime `@prisma/client`. Do NOT create or delete a
+`db/` at the project root: a split between the two locations produces
+`Error code 14: unable to open the database file`. The `.db` files are gitignored;
+regenerate them any time with the two seed commands above.
 - POST /api/newsletter → 200; /robots.txt, /sitemap.xml → 200.

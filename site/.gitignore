@@ -3,6 +3,8 @@ node_modules/
 *.log
 dev.pid
 .env
-db/*.db-journal
 next-env.d.ts
-prisma/db/
+# SQLite databases are derived from prisma/seed*.ts (the source of truth)
+*.db
+*.db-journal
+db/

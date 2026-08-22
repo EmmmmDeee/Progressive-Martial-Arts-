@@ -8,5 +8,7 @@
 #   baseline/perf-baseline.tsv                     timing + weight metrics
 set -euo pipefail
 cd "$(dirname "$0")/.."
-mkdir -p baseline/renders
+. tools/lib.sh
+tools/setup-browser-proxy-trust.sh   # CA trust + TLS policy for headless Chromium
+mkdir -p "$RENDER_DIR"
 node tools/perf-baseline.mjs

@@ -10,8 +10,9 @@ until the checklist at the bottom is fully green.**
 
 - WordPress + WooCommerce storefront, Yoast SEO (sitemap index at
   `/sitemap_index.xml`), REST API locked to authenticated users (401 on `/wp-json/`).
-- ~490 public URLs: ~238 products, ~171 product tags, 27 pages, 24 product
-  categories, 9 brands, 6 posts, plus categories/courses/authors.
+- Public URL universe: dominated by WooCommerce products, product tags and
+  categories, with a small page/post core — exact per-type counts are
+  generated into `baseline/BASELINE-SUMMARY.md` and must be read from there.
 - Cart/checkout live on a non-default slug: `/checkout/` → 301 →
   `/shopping-bag/` (noindex). `/cart/` and `/my-account/` return **404** —
   confirmed pre-existing production behaviour, recorded so the migration is
@@ -30,7 +31,7 @@ until the checklist at the bottom is fully green.**
 | `snapshots/<stamp>/configuration.txt` (core/plugins/themes/menus/permalinks) | same | discovery (2), plugin audit (27) |
 | `snapshots/<stamp>/commerce-counters.tsv` | same | restore proof, commerce phases (20–21) |
 | `snapshots/<stamp>/media-manifest.tsv` (path+size of every upload) | same | media dedupe (19) — no original may vanish unaccounted |
-| `baseline/url-inventory.tsv` (490 URLs from sitemaps + critical extras) | `tools/01-url-inventory.sh` | discovery (2), invariants (3), completeness (31) |
+| `baseline/url-inventory.tsv` (all sitemap URLs + critical extras; count in `baseline/BASELINE-SUMMARY.md`) | `tools/01-url-inventory.sh` | discovery (2), invariants (3), completeness (31) |
 | `baseline/http-baseline.tsv` (status, redirects, title, canonical, robots, description, body hash per URL) | `tools/02-capture-baseline.sh` | invariants (3), SEO (25), completeness (31) |
 | `baseline/redirect-map.tsv` (every observed 3xx hop) | same | invariant redirects (3, 25) |
 | `baseline/html/*.html` (raw HTML archive of every 200 page) | same | correction (4), editorial (23) — legacy copy stays recoverable |
@@ -64,7 +65,7 @@ rollback rehearsal. Snapshots are immutable once `SHA256SUMS` is written.
 - [ ] Production snapshot taken; `SHA256SUMS` verified
 - [ ] Snapshot restored into staging; `04-verify-restore.sh` green
       (counters match, smoke URLs 200, staging noindexed)
-- [x] URL inventory captured (490 URLs, all sitemaps + critical extras)
+- [x] URL inventory captured (all sitemaps + critical extras — counts live in `baseline/BASELINE-SUMMARY.md`)
 - [x] HTTP/SEO baseline captured for every inventoried URL, HTML archived
 - [x] Redirect behaviour recorded (incl. `/checkout/`→`/shopping-bag/`,
       `/cart/` + `/my-account/` = pre-existing 404s)
@@ -79,7 +80,7 @@ rollback rehearsal. Snapshots are immutable once `SHA256SUMS` is written.
 - Commerce: WooCommerce + WooCommerce PayPal Payments
 - Forms: Contact Form 7 sitewide; Simple Cloudflare Turnstile present on some pages
 - SEO: Yoast (sitemaps, canonicals, robots directives observed per-URL)
-- Analytics: **none** — no GA4/UA/GTM/pixel loader anywhere in the 488 captured
+- Analytics: **none** — no GA4/UA/GTM/pixel loader anywhere in the captured
   pages (baseline/analytics-state.tsv). Phase 33 needs analytics installed
   first; there is no historical web-analytics dataset to preserve, so the
   "analytics export" manual step reduces to Search Console + GBP only.

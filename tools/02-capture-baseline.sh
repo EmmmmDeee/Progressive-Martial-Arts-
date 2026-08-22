@@ -7,18 +7,20 @@
 #   baseline/http-baseline.tsv   one row per URL (status, redirects, SEO head, hashes)
 #   baseline/redirect-map.tsv    every 3xx hop observed (INVARIANT input for phase 3)
 #   baseline/html/<slug>.html    raw HTML archive of each 200 HTML response
+#   baseline/capture-date.txt    when this sweep ran (consumed by 06)
 set -euo pipefail
+. "$(dirname "$0")/lib.sh"
 
-IN="${IN:-baseline/url-inventory.tsv}"
-OUT="${OUT:-baseline/http-baseline.tsv}"
-ARCHIVE="${ARCHIVE:-baseline/html}"
+IN="${IN:-$BASELINE_DIR/url-inventory.tsv}"
+OUT="${OUT:-$BASELINE_DIR/http-baseline.tsv}"
 JOBS="${JOBS:-6}"
-UA="PMAAI-migration-baseline/1.0"
+# partial reruns (custom IN) must not clobber the accumulated redirect map
+RESET_REDIRECT_MAP="${RESET_REDIRECT_MAP:-1}"
 
 # Working files live inside the repo tree, NOT /tmp: this environment purges
 # /tmp on a schedule, which silently destroys a long sweep's intermediate rows.
-ROWS="baseline/.rows.$$"; mkdir -p "$ROWS"; trap 'rm -rf "$ROWS"' EXIT
-mkdir -p "$ARCHIVE" "$(dirname "$OUT")"
+ROWS="$BASELINE_DIR/.rows.$$"; mkdir -p "$ROWS"; trap 'rm -rf "$ROWS"' EXIT
+mkdir -p "$ARCHIVE_DIR" "$(dirname "$OUT")"
 
 slug() {
   # NB: an empty path ("/") must still yield a name — a pipeline-final
@@ -27,54 +29,59 @@ slug() {
   s="$(printf '%s' "$1" | sed -e 's#^https\?://[^/]*##' -e 's#[^A-Za-z0-9._-]#_#g' -e 's#^_*##' | cut -c1-120)"
   printf '%s' "${s:-index}"
 }
-meta() { # meta <html-file> <name-or-property> ; first match, attribute-order agnostic
-  tr '\n' ' ' < "$1" \
-    | grep -oiE "<meta[^>]*(name|property)=[\"']$2[\"'][^>]*>" \
-    | head -1 | grep -oiE "content=[\"'][^\"']*" | sed -e "s/^content=[\"']//" | tr -d '\t'
+# hdrval <hdr-file> <header-name> — value of the last occurrence (final response)
+hdrval() { grep -i "^$2:" "$1" | tail -1 | cut -d: -f2- | sed 's/^ *//' | tr -d '\r'; }
+# first_attr <flat-html-file> <tag-regex> <attr> — attribute-order agnostic
+first_attr() {
+  grep -oiE "<$2[^>]*>" "$1" | head -1 \
+    | grep -oiE "$3=[\"'][^\"']*" | head -1 | sed -e "s/^$3=[\"']//" | tr -d '\t'
 }
 
 capture() {
   url="$1"
   s="$(slug "$url")"
   hdr="$(mktemp -p "$ROWS")"; body="$(mktemp -p "$ROWS")"
-  code="$(curl -sS -L -A "$UA" --max-time 60 --retry 2 --retry-delay 2 \
-          -D "$hdr" -o "$body" -w '%{http_code}' "$url" || echo 000)"
-  final="$(grep -i '^location:' "$hdr" | tail -1 | sed 's/^[Ll]ocation: *//' | tr -d '\r')"
-  [ -n "$final" ] || final="$url"
-  hops="$(grep -ciE '^HTTP/[0-9.]+ 3[0-9][0-9]' "$hdr" || true)"
-  ctype="$(grep -i '^content-type:' "$hdr" | tail -1 | sed 's/^[^:]*: *//' | tr -d '\r' | cut -d';' -f1)"
+  out="$(fetch "$url" -L -D "$hdr" -o "$body" -w '%{http_code}\t%{size_download}' || printf '000\t0')"
+  code="${out%%$'\t'*}"; bytes="${out##*$'\t'}"
+  final="$(hdrval "$hdr" location)"; [ -n "$final" ] || final="$url"
+  ctype="$(hdrval "$hdr" content-type | cut -d';' -f1)"
 
-  # record each redirect hop for the invariant map
-  awk 'BEGIN{IGNORECASE=1} /^HTTP\/[0-9.]+ 3[0-9][0-9]/{c=$2} /^[Ll]ocation:/{sub(/^[^:]*: */,"");gsub(/\r/,"");if(c)print c"\t"$0}' "$hdr" \
-    | while IFS=$'\t' read -r c loc; do printf '%s\t%s\t%s\n' "$url" "$c" "$loc"; done > "$ROWS/$s.redir"
+  # record each redirect hop for the invariant map; hop count derives from it
+  awk -v u="$url" 'BEGIN{IGNORECASE=1}
+    /^HTTP\/[0-9.]+ 3[0-9][0-9]/{c=$2}
+    /^[Ll]ocation:/{sub(/^[^:]*: */,"");gsub(/\r/,"");if(c)print u"\t"c"\t"$0}' "$hdr" > "$ROWS/$s.redir"
+  hops="$(wc -l < "$ROWS/$s.redir")"
 
   title=""; canon=""; robots=""; desc=""; h1=""; hash=""
   if [ "$code" = "200" ] && [ "$ctype" = "text/html" ]; then
-    cp "$body" "$ARCHIVE/$s.html"
-    title="$(tr '\n' ' ' < "$body" | grep -oiE '<title[^>]*>[^<]*' | head -1 | sed 's/^<[^>]*>//' | tr -d '\t')"
-    canon="$(tr '\n' ' ' < "$body" | grep -oiE "<link[^>]*rel=[\"']canonical[\"'][^>]*>" | head -1 | grep -oiE "href=[\"'][^\"']*" | sed -e "s/^href=[\"']//")"
-    robots="$(meta "$body" robots)"
-    desc="$(meta "$body" description)"
-    h1="$(tr '\n' ' ' < "$body" | grep -oiE '<h1[^>]*>.*?</h1>' | head -1 | sed -e 's/<[^>]*>//g' | tr -s ' ' | tr -d '\t' | cut -c1-160)"
+    cp "$body" "$ARCHIVE_DIR/$s.html"
+    flat="$(mktemp -p "$ROWS")"
+    tr '\n' ' ' < "$body" > "$flat"   # flatten once; every extractor reads this
+    title="$(grep -oiE '<title[^>]*>[^<]*' "$flat" | head -1 | sed 's/^<[^>]*>//' | tr -d '\t')"
+    canon="$(first_attr "$flat" "link[^>]*rel=[\"']canonical[\"']" href)"
+    robots="$(first_attr "$flat" "meta[^>]*(name|property)=[\"']robots[\"']" content)"
+    desc="$(first_attr "$flat" "meta[^>]*(name|property)=[\"']description[\"']" content)"
+    h1="$(sed -n 's#.*<[hH]1[^>]*>\([^<]*\).*#\1#p' "$flat" | tr -s ' ' | tr -d '\t' | cut -c1-160)"
     hash="$(sha256sum "$body" | cut -c1-16)"
+    rm -f "$flat"
   fi
   # one row per URL in its own file: concurrent appends to one shared stream
   # interleave under load, and a corrupted row is a corrupted baseline.
   printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
-    "$url" "$code" "$hops" "$final" "$ctype" "$(wc -c < "$body")" "$hash" "$title" "$canon" "$robots" "$desc" \
+    "$url" "$code" "$hops" "$final" "$ctype" "$bytes" "$hash" "$title" "$canon" "$robots" "$desc" \
     | tr -d '\r' > "$ROWS/$s.row"
   rm -f "$hdr" "$body"
 }
-export -f capture slug meta
-export ARCHIVE UA ROWS
+export -f capture slug hdrval first_attr fetch
+export ROWS
 
 printf 'url\tstatus\tredirect_hops\tfinal_location\tcontent_type\tbytes\tbody_sha256_16\ttitle\tcanonical\tmeta_robots\tmeta_description\n' > "$OUT"
-# partial reruns (custom IN) must not clobber the accumulated redirect map
-[ "$IN" = "baseline/url-inventory.tsv" ] && printf 'source_url\tstatus\tlocation\n' > baseline/redirect-map.tsv || true
+[ "$RESET_REDIRECT_MAP" = 1 ] && printf 'source_url\tstatus\tlocation\n' > "$BASELINE_DIR/redirect-map.tsv"
+date -u +%Y-%m-%dT%H:%M:%SZ > "$BASELINE_DIR/capture-date.txt"
 
-tail -n +2 "$IN" | cut -f1 | sort -u \
+tsv_body "$IN" | cut -f1 | sort -u \
   | xargs -P "$JOBS" -I{} bash -c 'capture "$@"' _ {} || true  # a failed URL still leaves a row; never abort the sweep
 
 cat "$ROWS"/*.row | sort >> "$OUT"
-cat "$ROWS"/*.redir 2>/dev/null | sort -u >> baseline/redirect-map.tsv
-echo "captured $(( $(wc -l < "$OUT") - 1 )) URLs; $(( $(wc -l < baseline/redirect-map.tsv) - 1 )) redirect hops"
+cat "$ROWS"/*.redir 2>/dev/null | sort -u >> "$BASELINE_DIR/redirect-map.tsv"
+echo "captured $(tsv_rows "$OUT") URLs; $(tsv_rows "$BASELINE_DIR/redirect-map.tsv") redirect hops"

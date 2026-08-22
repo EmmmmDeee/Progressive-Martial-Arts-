@@ -13,7 +13,8 @@ set -euo pipefail
 WP_PATH="${WP_PATH:-/var/www/html}"
 STAMP="${STAMP:-$(date -u +%Y%m%dT%H%M%SZ)}"
 DEST="${DEST:-snapshots/$STAMP}"
-RSH=(ssh -o BatchMode=yes "$SSH_TARGET")
+# multiplexed: the ~17 wp/tar invocations below share one SSH connection
+RSH=(ssh -o BatchMode=yes -o ControlMaster=auto -o ControlPath=~/.ssh/cm-%r@%h:%p -o ControlPersist=120 "$SSH_TARGET")
 WP="wp --path=$WP_PATH --skip-plugins --skip-themes"
 
 mkdir -p "$DEST"

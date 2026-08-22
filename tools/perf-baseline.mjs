@@ -4,6 +4,7 @@ import { chromium } from 'playwright';
 import fs from 'node:fs';
 
 const SITE = process.env.SITE ?? 'https://progressivemartialarts.com.au';
+const UA = process.env.BASELINE_UA ?? 'PMAAI-migration-baseline/1.0';
 // One URL per template family; extend as discovery (phase 2) reveals more.
 const PAGES = [
   ['home', '/'],
@@ -23,24 +24,37 @@ const PAGES = [
 ];
 const VIEWPORTS = { desktop: { width: 1440, height: 900 }, mobile: { width: 390, height: 844 } };
 
-const rows = [['page', 'viewport', 'url', 'status', 'ttfb_ms', 'domContentLoaded_ms', 'load_ms', 'lcp_ms', 'cls', 'transfer_kb', 'requests', 'img_missing_alt', 'h1_count']];
+const HEADER = ['page', 'viewport', 'url', 'status', 'ttfb_ms', 'domContentLoaded_ms', 'load_ms', 'lcp_ms', 'cls', 'transfer_kb', 'requests', 'img_missing_alt', 'h1_count'];
+const BASE = process.env.BASELINE_DIR ?? 'baseline';
+const RENDERS = process.env.RENDER_DIR ?? `${BASE}/renders`;
+const TSV = `${BASE}/perf-baseline.tsv`;
+fs.writeFileSync(TSV, HEADER.join('\t') + '\n');
+let rowCount = 0;
+const emit = row => { // append-only: a killed run still leaves a usable partial baseline
+  while (row.length < HEADER.length) row.push('');
+  console.log(row.join(' | '));
+  fs.appendFileSync(TSV, row.join('\t') + '\n');
+  rowCount++;
+};
+
+// Chromium does not read HTTPS_PROXY — route through the session egress proxy
+// explicitly. CA trust and TLS policy for that path are owned by
+// tools/setup-browser-proxy-trust.sh (run it first; 03-performance-baseline.sh
+// does). The TLS 1.2 cap applies on the proxy path only; certificate
+// verification stays enabled.
+const proxy = process.env.HTTPS_PROXY;
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium', // pre-installed; project-pinned build absent
-  // Chromium does not read HTTPS_PROXY — route through the session egress
-  // proxy explicitly. Its CA must be in the browser NSS store
-  // (certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n ccr-agent-proxy -i /root/.ccr/agent-proxy-ca.crt)
-  // and the gateway's TLS termination resets Chromium's TLS 1.3 hello, so cap
-  // at 1.2 on the proxy path only. Certificate verification stays enabled.
-  proxy: process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY } : undefined,
-  args: process.env.HTTPS_PROXY ? ['--ssl-version-max=tls1.2'] : [],
+  proxy: proxy ? { server: proxy } : undefined,
+  args: proxy ? ['--ssl-version-max=tls1.2'] : [],
 });
 
 for (const [name, path] of PAGES) {
   for (const [vp, size] of Object.entries(VIEWPORTS)) {
-    const ctx = await browser.newContext({ viewport: size, userAgent: 'PMAAI-migration-baseline/1.0' });
+    const ctx = await browser.newContext({ viewport: size, userAgent: UA });
     const page = await ctx.newPage();
     let transfer = 0, requests = 0;
-    page.on('response', async r => { requests++; transfer += Number(r.headers()['content-length'] ?? 0); });
+    page.on('response', r => { requests++; transfer += Number(r.headers()['content-length'] ?? 0); });
     try {
       // generous timeout: the baseline must record slow pages, not skip them
       const resp = await page.goto(SITE + path, { waitUntil: 'load', timeout: 90000 });
@@ -57,18 +71,14 @@ for (const [name, path] of PAGES) {
           h1s: document.querySelectorAll('h1').length,
         }), 500);
       }));
-      await page.screenshot({ path: `baseline/renders/${name}-${vp}.png`, fullPage: true });
-      rows.push([name, vp, path, resp.status(), Math.round(m.ttfb), Math.round(m.dcl), Math.round(m.load),
+      await page.screenshot({ path: `${RENDERS}/${name}-${vp}.png`, fullPage: true });
+      emit([name, vp, path, resp.status(), Math.round(m.ttfb), Math.round(m.dcl), Math.round(m.load),
         Math.round(m.lcp), m.cls.toFixed(3), Math.round(transfer / 1024), requests, m.imgNoAlt, m.h1s]);
     } catch (e) {
-      rows.push([name, vp, path, 'ERROR:' + String(e).slice(0, 60).replaceAll('\t', ' '), '', '', '', '', '', '', '', '', '']);
+      emit([name, vp, path, 'ERROR:' + String(e).slice(0, 60).replaceAll('\t', ' ')]);
     }
-    // stream progress + persist after every page: a killed run still leaves a usable partial baseline
-    console.log(rows.at(-1).join(' | '));
-    fs.writeFileSync('baseline/perf-baseline.tsv', rows.map(r => r.join('\t')).join('\n') + '\n');
     await ctx.close();
   }
 }
 await browser.close();
-fs.writeFileSync('baseline/perf-baseline.tsv', rows.map(r => r.join('\t')).join('\n') + '\n');
-console.log(`perf baseline: ${rows.length - 1} rows -> baseline/perf-baseline.tsv`);
+console.log(`perf baseline: ${rowCount} rows -> ${TSV}`);

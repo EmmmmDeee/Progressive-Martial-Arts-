@@ -4,12 +4,13 @@
 # migrated site must keep reporting into the same properties (phase 3 locks
 # them; phase 33 measures through them).
 set -euo pipefail
-ARCHIVE="${ARCHIVE:-baseline/html}"
-OUT="${OUT:-baseline/analytics-state.tsv}"
+. "$(dirname "$0")/lib.sh"
+OUT="${OUT:-$BASELINE_DIR/analytics-state.tsv}"
 
 printf 'kind\tid\tpages\n' > "$OUT"
-scan() { # scan <kind> <regex> — zero matches is a result, not an error
-  { grep -hoE "$2" "$ARCHIVE"/*.html 2>/dev/null || true; } | sort | uniq -c | sort -rn \
+scan() { # scan <kind> <regex> [extract-sed-expr] — zero matches is a result, not an error
+  { grep -hoE "$2" "$ARCHIVE_DIR"/*.html 2>/dev/null || true; } \
+    | sed "${3:-}" | sort | uniq -c | sort -rn \
     | awk -v k="$1" '{print k"\t"$2"\t"$1}'
 }
 {

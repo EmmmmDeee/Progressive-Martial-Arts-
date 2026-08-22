@@ -45,6 +45,25 @@ TAG_ALIASES = {
 
 def classify(p, status, robots):
     """-> (purpose, entity, disposition, target_path, redirect_code, note)"""
+    # --- audit-verified specific-URL overrides (must precede set/prefix rules) ---
+    if p == "/professor-jean-jacques-seminar/":
+        return ("completed-event recap post", "EVENT", "MODERNISE", p, "",
+                "VERIFIED: promotes the COMPLETED Apr 2026 Machado seminar and links a 404 product; mark completed, swap dead link to /pictures-master-jean-jacques-machado-seminar-2023/, keep as recap")
+    if "jean-jacques-machado-seminar-brisbane-april-23-26-2026" in p:
+        return ("expired seminar product (404)", "EVENT", "REDIRECT", "/product-category/seminar/", "301",
+                "VERIFIED 404 while still linked from /professor-jean-jacques-seminar/")
+    if p == "/pictures-master-jean-jacques-machado-seminar-2023/":
+        return ("empty gallery", "MEDIA", "REDIRECT", "/pictures-from-earlier-seminars/", "301",
+                "VERIFIED empty Elementor gallery, first item in the Pictures menu; fix-or-301")
+    if p == "/historical-pictures-from-various-classes/":
+        return ("thin gallery -> history", "MEDIA", "CONSOLIDATE", "/pmaai-history/", "301",
+                "5 images/0 text; MERGE into the history timeline then 301")
+    if p == "/student-photos/":
+        return ("thin gallery -> seminar hub", "MEDIA", "CONSOLIDATE", "/pictures-from-earlier-seminars/", "301",
+                "2 images + 1 empty widget; MERGE then 301")
+    if p == "/jeet-kune-do-concepts/":
+        return ("JKD concepts page (thin, collides)", "PROGRAM", "MODERNISE", p, "",
+                "COLLISION with /lee-jun-fan-gung-fu/ for 'jeet kune do brisbane'; ~300-word dead end, no CTA. MERGE+301 into /lee-jun-fan-gung-fu/ IFF no separate Concepts class exists on the schedule (UNKNOWN — timetable is an image); else DIFFERENTIATE + add CTA block")
     if p in PROGRAMS:
         return ("program page", "PROGRAM", "MODERNISE", p, "",
                 "URL kept (search equity); template/content modernised; joins /training/ hub")
@@ -68,9 +87,6 @@ def classify(p, status, robots):
     if p in GALLERIES:
         return ("event/media gallery", "MEDIA", "CONSOLIDATE", p, "",
                 "keep URL; leave primary nav; index from a single archive hub")
-    if p == "/professor-jean-jacques-seminar/":
-        return ("upcoming event", "EVENT", "MODERNISE", p, "",
-                "P0: registration product link 404s — repair before anything else")
     if p in DEMO:
         return ("theme demo remnant", "-", "REMOVE", "", "410", "never legitimate content")
     if p.startswith("/courses/") or p == "/courses/":

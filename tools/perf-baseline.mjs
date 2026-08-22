@@ -54,6 +54,9 @@ for (const [name, path] of PAGES) {
     } catch (e) {
       rows.push([name, vp, path, 'ERROR:' + String(e).slice(0, 60).replaceAll('\t', ' '), '', '', '', '', '', '', '', '', '']);
     }
+    // stream progress + persist after every page: a killed run still leaves a usable partial baseline
+    console.log(rows.at(-1).join(' | '));
+    fs.writeFileSync('baseline/perf-baseline.tsv', rows.map(r => r.join('\t')).join('\n') + '\n');
     await ctx.close();
   }
 }

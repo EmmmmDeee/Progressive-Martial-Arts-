@@ -1,0 +1,22 @@
+# robots.txt for Progressive Martial Arts Academy International (PMAAI)
+# https://progressivemartialarts.com.au/
+
+User-agent: Googlebot
+Allow: /
+Allow: /api/
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /api/orders
+Disallow: /api/contact
+Disallow: /api/enroll
+Disallow: /api/newsletter
+
+# Sitemap
+Sitemap: https://progressivemartialarts.com.au/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1

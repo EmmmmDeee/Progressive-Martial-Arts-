@@ -1,0 +1,295 @@
+// Prisma schema for Progressive Martial Arts Academy International (PMAAI)
+// Canonical relationship model: Program ↔ Instructor ↔ Timetable ↔ Event ↔ Media ↔ Product
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Core entities ----------
+
+model ArtDiscipline {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  origin       String
+  description  String
+  focus        String   // "Stand-up", "Weaponry", "Ground", "Kids"
+  image        String
+  icon         String?
+  order        Int      @default(0)
+
+  // Program detail (Stage 12-13: canonical program template)
+  tagline        String?
+  longDescription String?
+  suitability    String?   // who it's for
+  whatYouLearn   String?   // bullet-separated
+  whatToBring    String?
+  difficulty     String   @default("All Levels") // Beginner / Intermediate / Advanced / All Levels
+  minAge         Int      @default(13)
+  accentColor    String?  // per-discipline accent
+
+  // Relationships
+  classes       ClassSchedule[]
+  faqs          Faq[]
+  media         Media[]
+  events        Seminar[]
+  instructors   Instructor[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Instructor {
+  id              String   @id @default(cuid())
+  name            String
+  role            String
+  specialty       String
+  bio             String
+  image           String
+  certifications  String?
+  yearsExperience Int      @default(0)
+  order           Int      @default(0)
+
+  // Extended profile (Stage 16)
+  email           String?
+  phone           String?
+  longBio         String?
+  accentImage     String?  // secondary/gallery image
+  quote           String?
+  socialInstagram String?
+  socialFacebook  String?
+  startedTraining String?  // year
+  joinedPMAAI     String?  // year
+
+  // Relationships
+  artDisciplineIds String   @default("") // comma-separated discipline ids
+  disciplines     ArtDiscipline[]
+  classes         ClassSchedule[]
+  events          Seminar[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ClassSchedule {
+  id           String   @id @default(cuid())
+  day          String   // "Monday".."Sunday"
+  startTime    String   // "18:00"
+  endTime      String   // "19:30"
+  level        String   // "All Levels", "Beginner", "Advanced", "Kids"
+  instructor   String
+  room         String   @default("Main Mat")
+  capacity     Int      @default(20)
+  notes        String?
+
+  // Relationships
+  artId        String?
+  art          ArtDiscipline? @relation(fields: [artId], references: [id])
+  instructorId String?
+  instructorRel Instructor? @relation(fields: [instructorId], references: [id])
+
+  // Denormalised art name for display fallback / legacy compatibility
+  artName      String   @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Seminar {
+  id          String   @id @default(cuid())
+  title       String
+  guest       String
+  date        DateTime
+  endDate     DateTime?
+  description String
+  image       String
+  spotsTotal  Int      @default(40)
+  spotsLeft   Int      @default(40)
+  price       Float    @default(0)
+  location    String   @default("PMAAI Dojo, Tingalpa")
+  status      String   @default("upcoming") // upcoming | current | completed | archived
+  featured    Boolean  @default(false)
+  galleryUrl  String?  // post-event gallery link
+
+  // Relationships
+  artId       String?
+  art         ArtDiscipline? @relation(fields: [artId], references: [id])
+  instructorId String?
+  instructor  Instructor? @relation(fields: [instructorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------- Commerce ----------
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  longDescription String?
+  price       Float
+  compareAt   Float?
+  category    String   // apparel | equipment | media | accessory
+  subcategory String?
+  image       String
+  gallery     String?  // pipe-separated additional images
+  badge       String?
+  inStock     Boolean  @default(true)
+  stockQty    Int      @default(50)
+  sku         String?
+  rating      Float    @default(5)
+  reviewCount Int      @default(0)
+  weight      Float?   // grams
+  sizes       String?  // pipe-separated: XS|S|M|L|XL
+  colors      String?  // pipe-separated
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  email       String
+  name        String
+  phone       String?
+  address     String?
+  city        String?
+  postcode    String?
+  state       String?
+  country     String   @default("Australia")
+  items       String   // JSON string of cart items
+  subtotal    Float
+  shipping    Float    @default(0)
+  total       Float
+  status      String   @default("pending") // pending | paid | fulfilled | cancelled
+  stripeRef   String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ---------- Knowledge ----------
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String   @default("general") // general | muay-thai | bjj | kali | jkd | silat | jun-fan | kids | membership
+  order     Int      @default(0)
+  artId     String?
+  art       ArtDiscipline? @relation(fields: [artId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------- Media ----------
+
+model Media {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  thumbnail   String?
+  type        String   @default("image") // image | video
+  category    String   @default("training") // training | instructor | event | academy | kids | historical
+  caption     String?
+  year        Int?
+  artId       String?
+  art         ArtDiscipline? @relation(fields: [artId], references: [id])
+  eventId     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ---------- Leads / conversion ----------
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  art       String?
+  status    String   @default("new") // new | read | responded
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TrialEnrollment {
+  id            String   @id @default(cuid())
+  name          String
+  email         String
+  phone         String
+  art           String
+  experience    String   @default("none")
+  preferredDate String?
+  message       String?
+  status        String   @default("pending") // pending | confirmed | completed
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model NewsletterSub {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  source    String   @default("footer")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  content   String
+  rating    Int      @default(5)
+  image     String?
+  art       String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------- Youth program (Stage 14 prep) ----------
+
+model YouthProgram {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  ageMin       Int
+  ageMax       Int
+  description  String
+  whatYouLearn String?
+  image        String
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ---------- Blog / News (Stage 23 editorial) ----------
+
+model BlogArticle {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String   // markdown body
+  category    String   @default("general") // training | events | lineage | kids | community | general
+  tags        String?  // pipe-separated
+  image       String
+  authorId    String?
+  authorName  String   @default("PMAAI Team")
+  published   Boolean  @default(true)
+  featured    Boolean  @default(false)
+  readMinutes Int      @default(4)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -27,8 +27,12 @@ const rows = [['page', 'viewport', 'url', 'status', 'ttfb_ms', 'domContentLoaded
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium', // pre-installed; project-pinned build absent
   // Chromium does not read HTTPS_PROXY — route through the session egress
-  // proxy explicitly (its CA is already installed in the browser NSS store).
+  // proxy explicitly. Its CA must be in the browser NSS store
+  // (certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n ccr-agent-proxy -i /root/.ccr/agent-proxy-ca.crt)
+  // and the gateway's TLS termination resets Chromium's TLS 1.3 hello, so cap
+  // at 1.2 on the proxy path only. Certificate verification stays enabled.
   proxy: process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY } : undefined,
+  args: process.env.HTTPS_PROXY ? ['--ssl-version-max=tls1.2'] : [],
 });
 
 for (const [name, path] of PAGES) {

@@ -69,7 +69,8 @@ export -f capture slug meta
 export ARCHIVE UA ROWS
 
 printf 'url\tstatus\tredirect_hops\tfinal_location\tcontent_type\tbytes\tbody_sha256_16\ttitle\tcanonical\tmeta_robots\tmeta_description\n' > "$OUT"
-printf 'source_url\tstatus\tlocation\n' > baseline/redirect-map.tsv
+# partial reruns (custom IN) must not clobber the accumulated redirect map
+[ "$IN" = "baseline/url-inventory.tsv" ] && printf 'source_url\tstatus\tlocation\n' > baseline/redirect-map.tsv || true
 
 tail -n +2 "$IN" | cut -f1 | sort -u \
   | xargs -P "$JOBS" -I{} bash -c 'capture "$@"' _ {} || true  # a failed URL still leaves a row; never abort the sweep

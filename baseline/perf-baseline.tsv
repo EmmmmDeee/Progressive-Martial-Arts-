@@ -14,3 +14,16 @@ instructors	mobile	/pmaai-instructors-and-support-crew/	200	2656	4963	5296	3780	
 history	desktop	/pmaai-history/	200	2551	5069	5580	3904	0.008	948	75	0	2
 history	mobile	/pmaai-history/	200	2607	5115	5140	3716	0.030	657	68	0	2
 contact	desktop	/contact/	200	2626	6078	6455	3764	0.007	1348	142	0	1
+contact	mobile	/contact/	200	2618	5905	6271	3740	0.001	1044	112	0	1
+blog-archive	desktop	/blog/	200	2509	4967	5487	3624	0.009	553	55	0	0
+blog-archive	mobile	/blog/	200	2812	6175	6176	4384	0.074	439	53	0	0
+gallery	desktop	/student-photos/	200	2686	5833	6176	6808	0.150	791	68	0	2
+gallery	mobile	/student-photos/	200	2607	5662	5664	3936	0.208	643	66	0	2
+shop	desktop	/shop/	200	2678	5131	5701	3956	0.017	1455	70	0	1
+shop	mobile	/shop/	200	2669	5122	5150	3764	0.002	947	59	0	1
+product-cat	desktop	/product-category/gis/	200	2494	4931	5259	3748	0.032	772	59	0	1
+product-cat	mobile	/product-category/gis/	200	2576	5064	5090	3848	0.000	657	57	0	1
+product	desktop	/product/focus-mitts-punch-brand-thumpas/	200	2611	6521	7905	7512	0.009	1341	75	0	1
+product	mobile	/product/focus-mitts-punch-brand-thumpas/	200	2638	5250	5972	3736	0.412	1189	72	0	1
+checkout	desktop	/shopping-bag/	200	2556	4786	5258	3652	0.007	609	62	0	1
+checkout	mobile	/shopping-bag/	200	2504	5267	5710	3604	0.001	495	60	0	1

@@ -39,7 +39,8 @@ tail -n +2 $B/analytics-state.tsv 2>/dev/null | awk -F'\t' '{print "- "$1": "$2"
 echo
 echo "## Performance / render baseline (desktop + mobile)"
 echo '```'
-column -t -s"$(printf '\t')" $B/perf-baseline.tsv 2>/dev/null || echo "perf baseline missing"
+# column(1) is absent on minimal images — align with awk instead
+awk -F'\t' '{for(i=1;i<=NF;i++) printf "%-*s", (i==3?42:(i==1?14:10)), $i; print ""}' $B/perf-baseline.tsv 2>/dev/null || echo "perf baseline missing"
 echo '```'
 } > "$OUT"
 echo "summary -> $OUT"

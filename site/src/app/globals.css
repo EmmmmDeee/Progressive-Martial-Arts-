@@ -1,0 +1,272 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  /* Light theme - kept but app defaults to dark martial-arts aesthetic */
+  --background: oklch(0.985 0.002 60);
+  --foreground: oklch(0.18 0.02 30);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.02 30);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.02 30);
+  --primary: oklch(0.55 0.22 25);
+  --primary-foreground: oklch(0.98 0.01 60);
+  --secondary: oklch(0.96 0.02 60);
+  --secondary-foreground: oklch(0.22 0.03 30);
+  --muted: oklch(0.96 0.01 60);
+  --muted-foreground: oklch(0.48 0.02 30);
+  --accent: oklch(0.82 0.13 75);
+  --accent-foreground: oklch(0.22 0.05 50);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.01 50);
+  --input: oklch(0.9 0.01 50);
+  --ring: oklch(0.55 0.22 25);
+  --chart-1: oklch(0.55 0.22 25);
+  --chart-2: oklch(0.82 0.13 75);
+  --chart-3: oklch(0.5 0.12 200);
+  --chart-4: oklch(0.7 0.15 145);
+  --chart-5: oklch(0.65 0.2 305);
+  --sidebar: oklch(0.98 0.005 60);
+  --sidebar-foreground: oklch(0.18 0.02 30);
+  --sidebar-primary: oklch(0.55 0.22 25);
+  --sidebar-primary-foreground: oklch(0.98 0.01 60);
+  --sidebar-accent: oklch(0.96 0.02 60);
+  --sidebar-accent-foreground: oklch(0.22 0.03 30);
+  --sidebar-border: oklch(0.9 0.01 50);
+  --sidebar-ring: oklch(0.55 0.22 25);
+}
+
+.dark {
+  /* Dark martial-arts aesthetic: charcoal/black + crimson + gold */
+  --background: oklch(0.14 0.005 50);
+  --foreground: oklch(0.96 0.008 60);
+  --card: oklch(0.18 0.008 50);
+  --card-foreground: oklch(0.96 0.008 60);
+  --popover: oklch(0.16 0.008 50);
+  --popover-foreground: oklch(0.96 0.008 60);
+  --primary: oklch(0.58 0.24 27);        /* crimson red */
+  --primary-foreground: oklch(0.98 0.01 60);
+  --secondary: oklch(0.24 0.01 50);
+  --secondary-foreground: oklch(0.96 0.008 60);
+  --muted: oklch(0.22 0.008 50);
+  --muted-foreground: oklch(0.7 0.015 60);
+  --accent: oklch(0.78 0.14 75);          /* gold */
+  --accent-foreground: oklch(0.16 0.02 50);
+  --destructive: oklch(0.65 0.25 25);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.58 0.24 27);
+  --chart-1: oklch(0.58 0.24 27);
+  --chart-2: oklch(0.78 0.14 75);
+  --chart-3: oklch(0.6 0.18 200);
+  --chart-4: oklch(0.7 0.18 145);
+  --chart-5: oklch(0.65 0.2 305);
+  --sidebar: oklch(0.16 0.008 50);
+  --sidebar-foreground: oklch(0.96 0.008 60);
+  --sidebar-primary: oklch(0.58 0.24 27);
+  --sidebar-primary-foreground: oklch(0.98 0.01 60);
+  --sidebar-accent: oklch(0.24 0.01 50);
+  --sidebar-accent-foreground: oklch(0.96 0.008 60);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.58 0.24 27);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  ::selection {
+    @apply bg-primary/30 text-foreground;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(0.14 0.005 50);
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.35 0.05 30);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.58 0.24 27);
+}
+
+/* Utility: text gradient */
+.text-gradient-gold {
+  background: linear-gradient(135deg, oklch(0.85 0.14 75), oklch(0.72 0.16 60));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.text-gradient-crimson {
+  background: linear-gradient(135deg, oklch(0.68 0.24 27), oklch(0.5 0.2 15));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Subtle grain / texture overlay */
+.bg-grain {
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Diagonal stripe pattern for martial-arts accents */
+.bg-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(255,255,255,0.03) 10px,
+    rgba(255,255,255,0.03) 11px
+  );
+}
+
+/* Animated glow pulse for hero CTA */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(220, 38, 38, 0); }
+}
+.pulse-glow {
+  animation: pulse-glow 2.5s infinite;
+}
+
+/* Section fade-in on scroll */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+/* Marquee for partners / instructor names */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* Glassmorphism card */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Animated gradient border (for premium cards / CTAs) */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.gradient-border {
+  position: relative;
+  background: var(--card);
+  border-radius: var(--radius-xl);
+}
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, oklch(0.58 0.24 27 / 0.6), oklch(0.78 0.14 75 / 0.4), oklch(0.58 0.24 27 / 0.6));
+  background-size: 200% 200%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: gradient-shift 4s ease infinite;
+  pointer-events: none;
+}
+
+/* Shimmer effect for skeleton/loading */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Soft floating animation for badges/icons */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Reveal-on-scroll utility (used with IntersectionObserver if needed) */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

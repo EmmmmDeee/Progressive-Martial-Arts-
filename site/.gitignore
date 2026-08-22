@@ -1,0 +1,6 @@
+node_modules/
+.next/
+*.log
+dev.pid
+.env
+db/*.db-journal

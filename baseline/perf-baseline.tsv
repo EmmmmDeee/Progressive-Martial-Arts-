@@ -1,0 +1,16 @@
+page	viewport	url	status	ttfb_ms	domContentLoaded_ms	load_ms	lcp_ms	cls	transfer_kb	requests	img_missing_alt	h1_count
+home	desktop	/	200	2952	6554	7014	7044	0.010	1349	84	0	1
+home	mobile	/	200	2945	5866	6281	4636	0.024	1159	82	0	1
+program-bjj	desktop	/grappling-bjj/	200	2644	5300	9337	7152	0.170	3252	71	0	2
+program-bjj	mobile	/grappling-bjj/	200	2862	5527	5529	4196	0.854	3138	69	0	2
+program-kali	desktop	/kali/	200	2653	5206	5548	5568	0.165	900	75	0	2
+program-kali	mobile	/kali/	200	2626	5333	5360	3940	0.853	687	72	0	2
+timetable	desktop	/timetable/	200	2586	5222	5259	3908	0.013	872	71	0	1
+timetable	mobile	/timetable/	200	2633	5135	5137	3964	0.115	549	69	0	1
+kids	desktop	/mini-muscles/	200	2829	5650	5689	3872	0.282	1329	72	0	2
+kids	mobile	/mini-muscles/	200	2610	5163	5188	3740	0.787	708	70	0	2
+instructors	desktop	/pmaai-instructors-and-support-crew/	200	2794	5351	6183	3936	0.631	830	84	0	2
+instructors	mobile	/pmaai-instructors-and-support-crew/	200	2656	4963	5296	3780	0.793	575	69	0	2
+history	desktop	/pmaai-history/	200	2551	5069	5580	3904	0.008	948	75	0	2
+history	mobile	/pmaai-history/	200	2607	5115	5140	3716	0.030	657	68	0	2
+contact	desktop	/contact/	200	2626	6078	6455	3764	0.007	1348	142	0	1

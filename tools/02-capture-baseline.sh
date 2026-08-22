@@ -20,7 +20,13 @@ UA="PMAAI-migration-baseline/1.0"
 ROWS="baseline/.rows.$$"; mkdir -p "$ROWS"; trap 'rm -rf "$ROWS"' EXIT
 mkdir -p "$ARCHIVE" "$(dirname "$OUT")"
 
-slug() { printf '%s' "$1" | sed -e 's#^https\?://[^/]*##' -e 's#[^A-Za-z0-9._-]#_#g' -e 's#^_*##' | cut -c1-120 | sed 's#^$#index#'; }
+slug() {
+  # NB: an empty path ("/") must still yield a name — a pipeline-final
+  # `sed s#^$#index#` never fires on zero-line input, so default in the shell.
+  local s
+  s="$(printf '%s' "$1" | sed -e 's#^https\?://[^/]*##' -e 's#[^A-Za-z0-9._-]#_#g' -e 's#^_*##' | cut -c1-120)"
+  printf '%s' "${s:-index}"
+}
 meta() { # meta <html-file> <name-or-property> ; first match, attribute-order agnostic
   tr '\n' ' ' < "$1" \
     | grep -oiE "<meta[^>]*(name|property)=[\"']$2[\"'][^>]*>" \

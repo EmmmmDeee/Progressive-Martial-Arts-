@@ -8,12 +8,13 @@ ARCHIVE="${ARCHIVE:-baseline/html}"
 OUT="${OUT:-baseline/analytics-state.tsv}"
 
 printf 'kind\tid\tpages\n' > "$OUT"
-scan() { # scan <kind> <regex>
-  grep -hoE "$2" "$ARCHIVE"/*.html 2>/dev/null | sort | uniq -c | sort -rn \
+scan() { # scan <kind> <regex> — zero matches is a result, not an error
+  { grep -hoE "$2" "$ARCHIVE"/*.html 2>/dev/null || true; } | sort | uniq -c | sort -rn \
     | awk -v k="$1" '{print k"\t"$2"\t"$1}'
 }
 {
-  scan gtag        'G-[A-Z0-9]{6,12}'
+  # anchor GA4 ids to the loader/config call — a bare G-XXXX pattern false-positives on product SKUs
+  scan gtag        'gtag/js\?id=G-[A-Z0-9]{6,12}|gtag\(.config., ?.G-[A-Z0-9]{6,12}'
   scan universal   'UA-[0-9]{4,10}-[0-9]{1,3}'
   scan gtm         'GTM-[A-Z0-9]{4,10}'
   scan fb-pixel    'fbq\(.init., ?.[0-9]{8,20}' | sed "s/fbq(.init., \?.//"

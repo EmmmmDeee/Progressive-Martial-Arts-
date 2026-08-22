@@ -1,3 +1,5 @@
 node_modules/
 snapshots/
 nohup.out
+baseline/capture.log
+baseline/perf.log

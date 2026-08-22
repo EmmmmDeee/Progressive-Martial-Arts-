@@ -1,0 +1,22 @@
+# Generated from graph/migration-map.tsv — do not hand-edit.
+# Deterministic single-hop migrations: no chains, no loops.
+# Apply in the site root .htaccess ABOVE the WordPress rewrite block.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^author/15ef25c842b4a4bf/?$ - [G,L]
+RewriteRule ^author/7afa0b863b49dcc6/?$ - [G,L]
+RewriteRule ^cart/?$ /shopping-bag/ [R=301,L]
+RewriteRule ^checkout/?$ /shopping-bag/ [R=301,L]
+RewriteRule ^courses/hair-advanced-cource/?$ - [G,L]
+RewriteRule ^courses/hair-basic-cource/?$ - [G,L]
+RewriteRule ^courses/makeup-basic-cource/?$ - [G,L]
+RewriteRule ^courses/nail-basic-cource/?$ - [G,L]
+RewriteRule ^home-1-boxer/?$ - [G,L]
+RewriteRule ^latest-news/?$ /blog/ [R=301,L]
+RewriteRule ^product-tag/jeet-kune-do/?$ /product-tag/jun-fan-gung-fu/ [R=301,L]
+RewriteRule ^product-tag/jun-fan-gung-fu-jkd/?$ /product-tag/jun-fan-gung-fu/ [R=301,L]
+RewriteRule ^product-tag/muay-thai-thai-boxing/?$ /product-tag/muay-thai/ [R=301,L]
+RewriteRule ^product-tag/pentjak-silat/?$ /product-tag/pencak-silat/ [R=301,L]
+RewriteRule ^shop-2/?$ - [G,L]
+RewriteRule ^thai-boxing/?$ /muay-thai/ [R=301,L]
+</IfModule>

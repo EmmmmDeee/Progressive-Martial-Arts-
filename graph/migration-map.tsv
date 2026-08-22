@@ -1,0 +1,17 @@
+old_url	disposition	new_url	redirect_code	canonical	note
+https://progressivemartialarts.com.au/author/15ef25c842b4a4bf/	REMOVE	(gone)	410		orphaned; disable author archives (Yoast)
+https://progressivemartialarts.com.au/author/7afa0b863b49dcc6/	REMOVE	(gone)	410		orphaned; disable author archives (Yoast)
+https://progressivemartialarts.com.au/cart/	REDIRECT	https://progressivemartialarts.com.au/shopping-bag/	301	https://progressivemartialarts.com.au/shopping-bag/	P0: currently 404; standard slug must resolve to the cart
+https://progressivemartialarts.com.au/checkout/	REDIRECT	https://progressivemartialarts.com.au/shopping-bag/	301	https://progressivemartialarts.com.au/shopping-bag/	already redirects 302; make permanent
+https://progressivemartialarts.com.au/courses/hair-advanced-cource/	REMOVE	(gone)	410		hair/nail/makeup demo data; unregister CPT
+https://progressivemartialarts.com.au/courses/hair-basic-cource/	REMOVE	(gone)	410		hair/nail/makeup demo data; unregister CPT
+https://progressivemartialarts.com.au/courses/makeup-basic-cource/	REMOVE	(gone)	410		hair/nail/makeup demo data; unregister CPT
+https://progressivemartialarts.com.au/courses/nail-basic-cource/	REMOVE	(gone)	410		hair/nail/makeup demo data; unregister CPT
+https://progressivemartialarts.com.au/home-1-boxer/	REMOVE	(gone)	410		never legitimate content
+https://progressivemartialarts.com.au/latest-news/	CONSOLIDATE	https://progressivemartialarts.com.au/blog/	301	https://progressivemartialarts.com.au/blog/	duplicate news surface; /blog/ is the canonical archive
+https://progressivemartialarts.com.au/product-tag/jeet-kune-do/	CONSOLIDATE	https://progressivemartialarts.com.au/product-tag/jun-fan-gung-fu/	301	https://progressivemartialarts.com.au/product-tag/jun-fan-gung-fu/	merge tag terms in WooCommerce, then 301
+https://progressivemartialarts.com.au/product-tag/jun-fan-gung-fu-jkd/	CONSOLIDATE	https://progressivemartialarts.com.au/product-tag/jun-fan-gung-fu/	301	https://progressivemartialarts.com.au/product-tag/jun-fan-gung-fu/	merge tag terms in WooCommerce, then 301
+https://progressivemartialarts.com.au/product-tag/muay-thai-thai-boxing/	CONSOLIDATE	https://progressivemartialarts.com.au/product-tag/muay-thai/	301	https://progressivemartialarts.com.au/product-tag/muay-thai/	merge tag terms in WooCommerce, then 301
+https://progressivemartialarts.com.au/product-tag/pentjak-silat/	CONSOLIDATE	https://progressivemartialarts.com.au/product-tag/pencak-silat/	301	https://progressivemartialarts.com.au/product-tag/pencak-silat/	merge tag terms in WooCommerce, then 301
+https://progressivemartialarts.com.au/shop-2/	REMOVE	(gone)	410		never legitimate content
+https://progressivemartialarts.com.au/thai-boxing/	CONSOLIDATE	https://progressivemartialarts.com.au/muay-thai/	301	https://progressivemartialarts.com.au/muay-thai/	legacy duplicate of Muay Thai (verified same discipline; no nav inbound)

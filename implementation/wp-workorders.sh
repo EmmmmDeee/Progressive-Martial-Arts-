@@ -73,3 +73,11 @@ echo "== P3-3: lexicography — canonical term spellings in titles/terms"
 # Proper-noun exemptions stand: 'World Thai Boxing Association', Inosanto DVD
 #   titles, 'Lameco Eskrima' keep official names.
 # Full defect list: graph/title-defects.tsv (regenerate: tools/22-lexicon-audit.py)
+
+echo "== P0-4: enforce protocol canonicalisation (VERIFIED 2026-08-22)"
+# http://progressivemartialarts.com.au/ serves 200 with no redirect to https
+# (HSTS header is sent on the http response, where browsers ignore it).
+# Add at the top of .htaccess, before all other rules:
+#   RewriteCond %{HTTPS} !=on
+#   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# Keep HSTS on https responses only. www -> apex 301 already works (verified).

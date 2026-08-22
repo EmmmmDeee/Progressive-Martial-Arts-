@@ -24,7 +24,12 @@ const PAGES = [
 const VIEWPORTS = { desktop: { width: 1440, height: 900 }, mobile: { width: 390, height: 844 } };
 
 const rows = [['page', 'viewport', 'url', 'status', 'ttfb_ms', 'domContentLoaded_ms', 'load_ms', 'lcp_ms', 'cls', 'transfer_kb', 'requests', 'img_missing_alt', 'h1_count']];
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium' /* pre-installed; project-pinned build absent */ });
+const browser = await chromium.launch({
+  executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium', // pre-installed; project-pinned build absent
+  // Chromium does not read HTTPS_PROXY — route through the session egress
+  // proxy explicitly (its CA is already installed in the browser NSS store).
+  proxy: process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY } : undefined,
+});
 
 for (const [name, path] of PAGES) {
   for (const [vp, size] of Object.entries(VIEWPORTS)) {

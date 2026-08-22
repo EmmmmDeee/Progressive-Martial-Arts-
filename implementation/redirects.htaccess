@@ -3,6 +3,9 @@
 # Apply in the site root .htaccess ABOVE the WordPress rewrite block.
 <IfModule mod_rewrite.c>
 RewriteEngine On
+# Protocol canonicalisation first (audit P1 / work-order P0-4):
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 RewriteRule ^author/15ef25c842b4a4bf/?$ - [G,L]
 RewriteRule ^author/7afa0b863b49dcc6/?$ - [G,L]
 RewriteRule ^cart/?$ /shopping-bag/ [R=301,L]
@@ -11,12 +14,16 @@ RewriteRule ^courses/hair-advanced-cource/?$ - [G,L]
 RewriteRule ^courses/hair-basic-cource/?$ - [G,L]
 RewriteRule ^courses/makeup-basic-cource/?$ - [G,L]
 RewriteRule ^courses/nail-basic-cource/?$ - [G,L]
+RewriteRule ^historical-pictures-from-various-classes/?$ /pmaai-history/ [R=301,L]
 RewriteRule ^home-1-boxer/?$ - [G,L]
 RewriteRule ^latest-news/?$ /blog/ [R=301,L]
+RewriteRule ^pictures-master-jean-jacques-machado-seminar-2023/?$ /pictures-from-earlier-seminars/ [R=301,L]
 RewriteRule ^product-tag/jeet-kune-do/?$ /product-tag/jun-fan-gung-fu/ [R=301,L]
 RewriteRule ^product-tag/jun-fan-gung-fu-jkd/?$ /product-tag/jun-fan-gung-fu/ [R=301,L]
 RewriteRule ^product-tag/muay-thai-thai-boxing/?$ /product-tag/muay-thai/ [R=301,L]
 RewriteRule ^product-tag/pentjak-silat/?$ /product-tag/pencak-silat/ [R=301,L]
+RewriteRule ^product/jean-jacques-machado-seminar-brisbane-april-23-26-2026/?$ /product-category/seminar/ [R=301,L]
 RewriteRule ^shop-2/?$ - [G,L]
+RewriteRule ^student-photos/?$ /pictures-from-earlier-seminars/ [R=301,L]
 RewriteRule ^thai-boxing/?$ /muay-thai/ [R=301,L]
 </IfModule>
